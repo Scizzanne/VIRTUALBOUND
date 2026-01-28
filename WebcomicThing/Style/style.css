@@ -120,7 +120,15 @@ a:hover {
     gap: 5vh;
 }
 
+.ep-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
 .ep {
+    position: relative;
     margin: auto;
     width: 100%;
     transition: 0.2s;
@@ -128,12 +136,80 @@ a:hover {
 }
 
 .ep:hover {
-    transform: scale(1.01);
+    transform: scale(1.1);
     opacity: 1;
 }
 
-.ep:active {
-    transform: scale(0.8);
+.ep-drop-down-content {
+    display: none;
+    background-image: url(../Images/Drop_Down_Menu.PNG);
+    background-size: 100% 100%;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    font-family: "Jersey 10", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 30px;
+    text-align: center;
+}
+
+.ep-menu-button {
+    border: none;
+    background-color: rgb(233, 233, 233);
+    margin-top: 5%;
+    font-family: "Jersey 10", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    text-align: center;
+    transition: 0.2s;
+}
+
+.big-button {
+    margin-top: 50%;
+    height: 17.5%;
+    width: 70%;
+    font-size: 5vw;
+}
+
+.small-button {
+    height: 10%;
+    width: 45%;
+    font-size: 3vw;
+}
+.ep-drop-down-content a {
+    padding-left: 23%;
+    padding-right: 23%;
+}
+
+.ep-menu-button:hover {
+    transform: scale(1.1);
+}
+
+.show {
+    display: block;
+}
+
+/* Credits */
+
+.cre-container {
+    margin: 5%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    gap: 5vh;
+}
+
+.cre-bio {
+    background-color: rgb(159, 159, 159);
+    width: 100%;
+    gap: 3vh;
+    transition: 0.2s;
+}
+
+.cre-bio:hover {
+    transform: scale(1.05);
 }
 
 /* Pages */
@@ -168,10 +244,10 @@ a:hover {
     grid-row: 1/2;
     overflow-y: auto;
     max-height: 80vh;
-    scrollbar-width: none;
 }
 
 .text-vr-ship {
+    color: rgb(255, 255, 255);
     background-color: rgba(42, 45, 135, 0.7);
 }
 
@@ -185,7 +261,6 @@ a:hover {
     grid-row: 1/2;
     overflow-y: auto;
     max-height: 80vh;
-    scrollbar-width: none;
 }
 
 .text-biscord p {
@@ -205,6 +280,7 @@ a:hover {
 .pfp {
     height: 9vh;
     border-radius: 50%;
+    margin: 2vh;
 }
 
 .top,
@@ -283,6 +359,10 @@ a:hover {
     color: rgb(70, 13, 108) ;
 }
 
+.sc {
+    color: rgb(255, 208, 253);
+}
+
 /* Media Query*/
 @media (max-width: 750px) {
 
@@ -290,6 +370,13 @@ a:hover {
 
 .button {
     font-size: 15px;
+}
+
+/* Credits */
+
+.cre-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
 }
 
 /* Pages */
@@ -372,6 +459,14 @@ a:hover {
 
 .ep {
     opacity: 1;
+}
+
+.big-button {
+    font-size: 6vw;
+}
+
+.small-button {
+    font-size: 4vw;
 }
 
 }
