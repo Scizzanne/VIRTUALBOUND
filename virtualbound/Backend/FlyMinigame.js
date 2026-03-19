@@ -108,8 +108,13 @@ export class FlyController {
         this.wallThreshold = 250; // ms 
         this.wallMargin = 20; // px dist from wall
 
-        // swatter avoidance 
-        
+        // swatter escape 
+        this.isEscaping = false;
+        this.escapeTime = 0;
+        this.escapeDuration = 180; // ms (tune this for "annoying but fair")
+        this.escapeSpeed = 2.8; // multiplier for zip speed
+        this.escapeDirX = 0;
+        this.escapeDirY = 0;
     }
 
     initialize() { // helper
@@ -166,6 +171,60 @@ export class FlyController {
         return noise1 + noise2;
     }
 
+    // ADDED -------------------------------------
+
+    getSwatterHeadRect() {
+        const rect = this.swatter.getBoundingClientRect();
+
+        const size = rect.width;
+
+        // shrink hitbox to actual "mesh" of swatter
+        const shrink = 0.5; // tune this (0.3–0.5 is good)
+
+        return {
+            left: rect.left + size * shrink,
+            right: rect.right - size * shrink,
+            top: rect.top + size * shrink,
+            bottom: rect.top + size * (1 - shrink)
+        };
+    }
+
+    checkSwatterThreat() {
+        if (this.isEscaping) return;
+
+        const flyRect = this.fly.getBoundingClientRect();
+        const head = this.getSwatterHeadRect();
+
+        const overlap =
+            flyRect.right > head.left &&
+            flyRect.left < head.right &&
+            flyRect.bottom > head.top &&
+            flyRect.top < head.bottom;
+
+        if (overlap) {
+            const headCenterX = (head.left + head.right) / 2;
+            const headCenterY = (head.top + head.bottom) / 2;
+
+            const flyCenterX = flyRect.left + flyRect.width / 2;
+            const flyCenterY = flyRect.top + flyRect.height / 2;
+
+            let dx = flyCenterX - headCenterX;
+            let dy = flyCenterY - headCenterY;
+
+            const mag = Math.hypot(dx, dy) || 1;
+
+            this.escapeDirX = dx / mag;
+            this.escapeDirY = dy / mag;
+
+            this.isEscaping = true;
+            this.escapeTime = 0;
+
+            this.generateEscapeWaypoint();
+        }
+    }
+
+    //  -------------------------------------
+
     update(deltaTime) { // setter
         if (!this.isInitialized) return;
 
@@ -181,6 +240,18 @@ export class FlyController {
         this.time += deltaTime;
         this.waypointTime += deltaTime;
 
+        // ADDED ------------------------------------- REORGANIZE
+
+        this.checkSwatterThreat();
+
+        const rect = this.gameArea.getBoundingClientRect();
+        const width = rect.width;
+        const height = rect.height;
+
+        //  -------------------------------------
+
+
+        
         // Switch waypoint if duration exceeded
         if (this.waypointTime > this.waypointDuration) {
             this.generateNewWaypoint();
@@ -190,21 +261,60 @@ export class FlyController {
         const progress = Math.min(this.waypointTime / this.waypointDuration, 1);
         const easeProgress = this.easeInOutQuad(progress);
         
+
+
+        // ADDED ------------------------------------- EDITED
+
         // Calculate start to target movement
-        let baseX = this.x + (this.targetX - this.x) * 0.01;
-        let baseY = this.y + (this.targetY - this.y) * 0.01;
+        let baseX, baseY;
+
+        if (this.isEscaping) {
+            this.escapeTime += deltaTime;
+
+            // Strong directional push
+            const push = this.escapeSpeed * 10;
+
+            let nextX = this.x + this.escapeDirX * push;
+            let nextY = this.y + this.escapeDirY * push;
+
+            // If pushing into wall → flip direction
+            if (nextX <= this.wallMargin || nextX >= width - this.wallMargin) {
+                this.escapeDirX *= -1;
+            }
+
+            if (nextY <= this.wallMargin || nextY >= height - this.wallMargin) {
+                this.escapeDirY *= -1;
+            }
+
+            baseX = this.x + this.escapeDirX * push;
+            baseY = this.y + this.escapeDirY * push;
+
+            // Add slight randomness so it’s not robotic
+            baseX += (Math.random() - 0.5) * 4;
+            baseY += (Math.random() - 0.5) * 4;
+
+            if (this.escapeTime > this.escapeDuration) {
+                this.isEscaping = false;
+            }
+        } else {
+            baseX = this.x + (this.targetX - this.x) * 0.01;
+            baseY = this.y + (this.targetY - this.y) * 0.01;
+        }
+
         
         // Add "noise" to the movement
         const noiseX = this.getNoiseOffset(this.noisePhaseX, this.time);
         const noiseY = this.getNoiseOffset(this.noisePhaseY, this.time);
         
-        this.x = baseX + noiseX;
-        this.y = baseY + noiseY;
+        if (this.isEscaping) {
+            this.x = baseX;
+            this.y = baseY;
+        } else {
+            this.x = baseX + noiseX;
+            this.y = baseY + noiseY;
+        }
+        //  -------------------------------------
         
-        // stay within game area bounds
-        const rect = this.gameArea.getBoundingClientRect();
-        const width = rect.width;
-        const height = rect.height;
         const margin = width * 0.05;
         
         this.x = Math.max(margin, Math.min(this.x, width - margin));
@@ -215,6 +325,22 @@ export class FlyController {
         const nearRight = this.x >= width - this.wallMargin;
         const nearTop = this.y <= this.wallMargin;
         const nearBottom = this.y >= height - this.wallMargin;
+
+        // ADDED -------------------------------------
+        const nearCorner =
+            (nearLeft && nearTop) ||
+            (nearLeft && nearBottom) ||
+            (nearRight && nearTop) ||
+            (nearRight && nearBottom);
+
+        if (nearCorner && this.isEscaping) {
+            // Force diagonal opposite direction
+            this.escapeDirX *= -1;
+            this.escapeDirY *= -1;
+
+            this.generateEscapeWaypoint();
+        }
+        //  -------------------------------------
 
         const isNearWall = nearLeft || nearRight || nearTop || nearBottom;
 
