@@ -451,7 +451,7 @@ a:hover {
     grid-row: 1/2;
     overflow-y: auto;
     max-height: 80vh;
-    clip-path: polygon(1% 1%, 100% 0, 99% 99%, 2% 99%);
+    clip-path: polygon(1% 1%, 100% 0, 99% 100%, 2% 99%);
 }
 
 .text-vr-ship {

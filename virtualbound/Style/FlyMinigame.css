@@ -1,6 +1,7 @@
 /* Previous & Next Buttons */
 .world-a {
     text-decoration: none;
+    user-select: none; 
     color: rgb(75, 75, 75);
 }
 .world-a:hover {
@@ -48,9 +49,12 @@
     z-index: 1;
 }
 
-#game-text:before {
-    content: "HIT THE FLY \A <-----";
-    white-space: pre-wrap;
+#game-text::after {
+    content: "HIT THE FLY";
+}
+
+#game-arrows {
+    display: block;
 }
 
 /* Portrait mode */
@@ -76,9 +80,13 @@
     .switch {
         grid-row: 3/4; 
     }
+    
+    #game-text::after {
+        content: "^^HIT THE FLY^^";
+    }
 
-    #game-text:before {
-        content: "^^ HIT THE FLY ^^";
+    #game-arrows {
+        display: none;
     }
 }
 
