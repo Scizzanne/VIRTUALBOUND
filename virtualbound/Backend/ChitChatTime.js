@@ -1,6 +1,6 @@
 // Constants
 const CHAT_INDICES = [85, 91, 94, 95, 96, 97, 99];
-const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 
 // Globals
 let currentIndex = 0;
@@ -31,7 +31,7 @@ window.onkeydown = function(event) {
     // Keys 1–7 map to CHAT_INDICES[0–6]
     if (key >= 1 && key <= CHAT_INDICES.length) {
         currentIndex = key - 1;
-        console.log("DEBUG → Jumping to index:", CHAT_INDICES[currentIndex]);
+        console.log("DEBUG!! Jumping to index:", CHAT_INDICES[currentIndex]);
         renderPage();
     }
 };
