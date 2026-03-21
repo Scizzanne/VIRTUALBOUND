@@ -89,12 +89,12 @@ a:hover {
 }
 
 /* Previous & Next Buttons web style */
-.world-a {
+.web-a {
     text-decoration: none;
     user-select: none; 
     color: rgb(75, 75, 75);
 }
-.world-a:hover {
+.web-a:hover {
     color: rgb(0, 0, 0);
     transform: scale(1.1);
     cursor: pointer;

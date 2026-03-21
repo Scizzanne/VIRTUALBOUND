@@ -134,8 +134,8 @@ function switchStyles(theCurrPage) {
         });
         text.classList.remove("text-vr-ship");
         swit.classList.remove("switch-vr-ship");
-        previous.className = "world-a";
-        next.className = "world-a";
+        previous.className = "web-a";
+        next.className = "web-a";
     } else {
         background.src = "./Images/vr_ship_background.png";
         header.classList.add("vr-ship-header");
