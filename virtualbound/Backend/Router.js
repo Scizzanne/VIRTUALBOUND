@@ -63,12 +63,12 @@ function goToPage(index) {
             window.location.replace("Interactable.html");
             break;
         case "fly":
-            window.location.href = "FlyMinigame.html";
+            window.location.replace("FlyMinigame.html");
             break;
         case "chat":
-            window.location.href = "ChitChatTime.html";
+            window.location.replace("ChitChatTime.html");
             break;
         default:
-            window.location.href = "Page.html";
+            window.location.replace("Page.html");
     }
 }

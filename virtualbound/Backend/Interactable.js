@@ -2,7 +2,7 @@
 // grab text of various indices
 
 // Constants
-const DEBUG_MODE = false;
+const DEBUG_MODE = true;
 const INTERACT_PAGES = [5, 30, 49, 64];
 
 // Globals
@@ -32,20 +32,16 @@ const interactArea = document.querySelector(".interact-area");
 const interactText = document.getElementById("interact-text");
 const interactBG = document.querySelector(".interact-bg");
 
-// initial conditions 
-next.hidden = true;
-//previous.hidden = true;
-
 window.onkeydown = function(event) { 
     if (DEBUG_MODE) {
         if (event.key  === '1') { 
-            loadInteract5();
+            loadInteract5(); currPage = 5;
         } else if (event.key  === '2') { 
-            loadInteract30();
+            loadInteract30(); currPage = 30;
         } else if (event.key  === '3') { 
-            loadInteract49();
+            loadInteract49(); currPage = 49;
         } else if (event.key  === '4') { 
-            loadInteract64();
+            loadInteract64(); currPage = 64;
         } 
     }
 }
@@ -55,7 +51,15 @@ function nextPageIn() { // goes to next page depending on current page
 
 }
 function prevPageIn() {
+    const curr = getCurrentPage();
 
+    const prev = curr - 1;
+
+    if (prev !== undefined) {
+        goToPage(prev);
+    } else {
+        console.warn("No previous mapping for interact page:", curr);
+    }
 }
 
 function loadPage() {
@@ -77,21 +81,27 @@ function orangeBoatSelect() {
 }
 function bedSelect() {
     console.log("bed");
+    goToPage(31);
 }
 function recordsSelect() {
     console.log("records");
+    goToPage(35);
 }
 function shelfSelect() {
     console.log("shelf");
+    goToPage(37);
 }
 function toasterSelect() {
     console.log("toaster");
+    goToPage(56);
 }
 function coffeeSelect() {
     console.log("coffee");
+    goToPage(50);
 }
 function fruitBowlSelect() {
     console.log("fruit bowl");
+    goToPage(54);
 }
 
 function buildHitbox({ top, left, width, height, onEnter, onLeave, onClick }) {
@@ -147,10 +157,15 @@ function resetInteract() {
 
     elementsToRemove.forEach(elem => elem.remove());
 
+    if (interactText) { // reset text
+        interactText.innerText = "";
+    }
+
     // reset globals
     outlineImages = [];
     isHovering = false;
     blinkOn = true;
+    next.hidden = false;
 }
 
 function startBlinking() {
@@ -172,6 +187,9 @@ function loadInteract5() {
     resetInteract();
     
     currInteract = 5;
+
+    const page = getPageData(currInteract); // grab page
+    interactText.innerText = page?.text || ""; // set text
 
     interactBG.src = "./Images/id_6_img/6_background.png";
 
@@ -226,6 +244,9 @@ function loadInteract30() {
     resetInteract();
     
     currInteract = 30;
+
+    const page = getPageData(currInteract); // grab page
+    interactText.innerText = page?.text || ""; // set text
 
     interactBG.src = "./Images/id_31_img/31_background.png";
 
@@ -317,6 +338,10 @@ function loadInteract49() {
     resetInteract();
 
     currInteract = 49;
+
+    const page = getPageData(currInteract); // grab page
+    interactText.innerText = page?.text || ""; // set text
+
     interactBG.src = "./Images/id_50_img/50_background.png";
 
     const toaster = document.createElement("img");
@@ -384,6 +409,10 @@ function loadInteract64() {
     resetInteract();
 
     currInteract = 64;
+    next.hidden = true;
+
+    const page = getPageData(currInteract); // grab page
+    interactText.innerText = page?.text || ""; // set text
 
     const sweaters = [];
     const sweaterConfigs = [
@@ -442,34 +471,42 @@ function handleSweaterClick(theEvent) { // implement later
         case "a": 
             // go to index 65 (different html)
             console.log("Selection A");
+            goToPage(65);
             break;
         case "b": 
             // go to index 66 (different html)
             console.log("Selection B");
+            goToPage(66);
             break;
         case "c": 
             // go to index 67 (different html) 
             console.log("Selection C");
+            goToPage(67);
             break;
         case "d": 
             // go to index 68 (different html)
             console.log("Selection D");
+            goToPage(68);
             break;
         case "e": 
             // go to index 69 (different html)
             console.log("Selection E");
+            goToPage(69);
             break;
         case "f": 
-            // go to ndex 70 (different html)
+            // go to index 70 (different html)
             console.log("Selection F");
+            goToPage(70);
             break;
         case "g": 
             // go to index 71 (different html)
             console.log("Selection G");
+            goToPage(71);
             break;
         case "h": 
             // go to index 72 (different html)
             console.log("Selection H");
+            goToPage(72);
             break;
     }
 }

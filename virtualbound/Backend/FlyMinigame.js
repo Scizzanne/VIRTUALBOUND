@@ -5,6 +5,7 @@
 // Constants
 const RATE = 60; // ms (lower = faster buzzing) - used in FlyController
 const FLY_SPEED = 0.01;
+const PAGE_NUM = 77;
 
 // Global Variables
 let gameActive = true; // Flag to control game state
@@ -30,24 +31,53 @@ const flyMusic = document.getElementById('fly-music');
 // initial conditions
 nextButton.style.display = 'none';
 
-// Static Functions
-function prevPageFly() {
-    if (gameActive) { // ONLY IF THE GAME IS ACTIVE
-        // go to previous page (./Images/77.png)
-        // index 76 in Pages.json
+
+document.addEventListener("DOMContentLoaded", initFlyMinigame);
+
+// get json (router)
+async function initFlyMinigame() {
+    await initRouter();
+
+    loadPage();
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+
+    const nextButton = document.getElementById('next');
+    const prevButton = document.getElementById('previous');
+
+    if (!nextButton || !prevButton) {
+        console.log("Buttons not found");
+        return;
     }
-}
-function nextPageFly() {
-    // go to next page (./Images/81.png)
-    // index 80 in Pages.json
-}
+
+    // initial state
+    nextButton.style.display = 'none';
+
+    prevButton.addEventListener('click', () => {
+        console.log("Prev clicked");
+
+        if (gameActive) {
+            goToPage(76);
+        } else {
+            window.location.reload();
+        }
+    });
+
+    nextButton.addEventListener('click', () => {
+        console.log("Next clicked");
+        goToPage(80);
+    });
+});
+
+// Functions
 function startMusic() {
     if (!flyMusic) {
         console.log("flyMusic not found");
         return;
     }
 
-    console.log("Trying to play music");
+    console.log("Trying to play music...");
 
     flyMusic.currentTime = 0;
     flyMusic.loop = true;
@@ -143,12 +173,6 @@ function checkHitOrMiss() {
     result = hit; // true if hit, false if miss
     console.log(hit ? "Hit" : "Miss");
 }
-// Yeah all it does is refresh the page for retry...
-prevButton.addEventListener('click', () => {
-    if (!gameActive) { // Only allow retry when game is over
-        window.location.reload();
-    }
-});
 
 // ACTIVATE MUSIC
 window.addEventListener('mousedown', () => {
@@ -228,7 +252,7 @@ if (gameArea) {
 }
 
 // make this into its own file later
-export class FlyController {
+class FlyController {
     constructor(flyElement, gameArea, swatterElem) {
         this.fly = flyElement;
         this.gameArea = gameArea;
