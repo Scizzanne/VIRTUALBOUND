@@ -79,7 +79,7 @@ function showPage(pageNum) {
 
     textContainer.innerText = page.text || "";
 
-    console.log("Index " + pageNum + " loaded.");
+    console.log("Index " + pageNum + " loaded.")
 
     preloadNextPage();
     switchStyles(pageNum);

@@ -22,6 +22,8 @@ async function initInteract() {
     const currPage = getCurrentPage();
     currInteract = currPage;
 
+    console.log("Index " + currInteract + " loaded.");
+
     loadPage();
 }
 
@@ -35,15 +37,17 @@ const interactBG = document.querySelector(".interact-bg");
 window.onkeydown = function(event) { 
     if (DEBUG_MODE) {
         if (event.key  === '1') { 
-            loadInteract5(); currPage = 5;
+            loadInteract5(); currInteract = 5;
         } else if (event.key  === '2') { 
-            loadInteract30(); currPage = 30;
+            loadInteract30(); currInteract = 30;
         } else if (event.key  === '3') { 
-            loadInteract49(); currPage = 49;
+            loadInteract49(); currInteract = 49;
         } else if (event.key  === '4') { 
-            loadInteract64(); currPage = 64;
+            loadInteract64(); currInteract = 64;
         } 
     }
+    console.log("Index " + currInteract + " loaded.");
+    setCurrPage(currInteract);
 }
 
 // Function

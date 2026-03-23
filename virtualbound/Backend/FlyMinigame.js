@@ -38,6 +38,10 @@ document.addEventListener("DOMContentLoaded", initFlyMinigame);
 async function initFlyMinigame() {
     await initRouter();
 
+    setCurrPage(77);
+
+    console.log(getCurrentPage());
+
     loadPage();
 }
 

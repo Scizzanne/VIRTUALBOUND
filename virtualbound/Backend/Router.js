@@ -40,6 +40,10 @@ function getCurrentPageType() {
     return "comic";
 }
 
+function setCurrPage(thePage) {
+    currPage = thePage;
+}
+
 function goToPage(index) {
     if (index < 0 || index >= pagesData.length) return;
 
