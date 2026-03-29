@@ -554,6 +554,10 @@ a:hover {
     margin: 0;
 }
 
+.br-empty {
+    display: none;
+}
+
 /* Colours */
 
 .pu {
@@ -771,6 +775,7 @@ a:hover {
     margin-top: 27.5vh;
     padding-left: 6%;
     padding-right: 6%;
+    font-size: 22.5px;
 }
 
 /* Music */
@@ -871,7 +876,15 @@ a:hover {
 }
 
 .web-a {
-    font-size: 10vw;
+    font-size: 11vw;
+}
+
+.vr-ship-a-switch {
+    font-size: 11vw;
+}
+
+.br-empty {
+    display: block;
 }
 
 }
