@@ -3,7 +3,12 @@ const IMAGE_TYPES = ["png", "jpg", "jpeg", "gif"];
 const VIDEO_TYPES = ["mp4", "webm", "mov"];
 const FIRST_PAGE = 0;
 const LAST_PAGE = 101; // change as needed
-const SPECIAL_TEXT = ["John the Banana", "Rose the Grape", "onyx", "You know what that means"];
+const SPECIAL_TEXT = {
+    "John the Banana": 103,
+    "Rose the Grape": 103,
+    "onyx": 104,
+    "You know what that means": 102,
+};
 
 // gather elements
 const textContainer = document.getElementById("comic-text");
@@ -52,7 +57,7 @@ function showPage(pageNum) {
     mediaParent = mediaContainer?.parentElement;
     
     renderMedia(file);
-    renderText(page.text);
+    renderText(page.text, pageNum);
 
     console.log("Index " + pageNum + " loaded.");
 
@@ -98,29 +103,27 @@ function renderMedia(theFile) {
     mediaContainer = element; // replace da old div :3
 }
 
-function renderText(theText) {
-    textContainer.innerHTML = ""; // clear text first
-
+function renderText(theText, pageNum) {
+    textContainer.innerHTML = "";
     if (!theText) return;
 
-    if (!isSpecialText(theText)) {
-        textContainer.textContent = theText;
-        return;
-    }
-
-    console.log("Special text detected");
-
-    const regex = new RegExp(`(${SPECIAL_TEXT.join("|")})`);
+    const regex = new RegExp(`(${Object.keys(SPECIAL_TEXT).join("|")})`);
     const parts = theText.split(regex);
 
     parts.forEach(part => {
-        if (SPECIAL_TEXT.includes(part)) {
+        if (SPECIAL_TEXT[part] !== undefined) {
             const el = document.createElement("a");
             el.className = "special";
+
+            // add extra class if page index < 25
+            if (pageNum < 25) {
+                el.classList.add("vr-special");
+            }
+
             el.textContent = part;
 
             el.addEventListener("click", () => {
-                specialSelect(getSpecialType(part));
+                goToPage(SPECIAL_TEXT[part]);
             });
 
             textContainer.appendChild(el);
@@ -130,30 +133,9 @@ function renderText(theText) {
     });
 }
 
-function specialSelect(theType) {
-    if (theType === "HomestuckFruits") {
-        console.log("Homestuck Fruits special text clicked!");
-        goToPage(103);
-    } else if (theType === "Onix") {
-        console.log("Onix special text clicked!");
-        goToPage(104);
-    } else if (theType === "Fish") {
-        console.log("You know what that means special text clicked!");
-        goToPage(102);
-    }
-}
-
 function isSpecialText(theText) {
     if (!theText) return false;
     return SPECIAL_TEXT.some(special => theText.includes(special));
-}
-
-function getSpecialType(theText) {
-    let type = null;
-    if (theText === SPECIAL_TEXT[0] || theText === SPECIAL_TEXT[1]) type = "HomestuckFruits";
-    if (theText === SPECIAL_TEXT[2]) type = "Onix";
-    if (theText === SPECIAL_TEXT[3]) type = "Fish";
-    return type;
 }
 
 function nextPage() {

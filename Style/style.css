@@ -589,6 +589,13 @@ a:hover {
     color: rgb(59, 59, 59);
     cursor: pointer;
 }
+.vr-special {
+    color: rgb(255, 255, 255);
+}
+.vr-special:hover {
+    color: rgb(194, 194, 194);
+    cursor: pointer;
+}
 
 /* Colours */
 
