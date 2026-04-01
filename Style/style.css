@@ -581,6 +581,15 @@ a:hover {
     display: none;
 }
 
+/* General Pages - Easter Egg Pages */
+.special {
+    color: rgb(0, 0, 0);
+}
+.special:hover {
+    color: rgb(59, 59, 59);
+    cursor: pointer;
+}
+
 /* Colours */
 
 .pu {

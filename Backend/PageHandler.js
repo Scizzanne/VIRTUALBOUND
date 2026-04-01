@@ -3,12 +3,14 @@ const IMAGE_TYPES = ["png", "jpg", "jpeg", "gif"];
 const VIDEO_TYPES = ["mp4", "webm", "mov"];
 const FIRST_PAGE = 0;
 const LAST_PAGE = 101; // change as needed
+const SPECIAL_TEXT = ["John the Banana", "Rose the Grape", "onyx", "You know what that means"];
 
 // gather elements
 const textContainer = document.getElementById("comic-text");
 const prev = document.getElementById("previous");
 const next = document.getElementById("next");
 
+// Globals
 let mediaContainer;
 let mediaParent;
 
@@ -45,26 +47,35 @@ function showPage(pageNum) {
     if (!page) return;
 
     const file = page.media;
-    const ext = file.split(".").pop().toLowerCase();
 
     // get da div
     mediaParent = mediaContainer?.parentElement;
+    
+    renderMedia(file);
+    renderText(page.text);
 
-    // Clear old media container div 
-    if (mediaContainer) {
+    console.log("Index " + pageNum + " loaded.");
+
+    updateNavigation(); 
+
+    preloadNextPage();
+}
+
+function renderMedia(theFile) {
+    const ext = theFile.split(".").pop().toLowerCase();
+    let element;
+
+    if (mediaContainer) { // clear media first
         mediaContainer.innerHTML = "";
     }
-    textContainer.innerHTML = "";
-
-    let element;
 
     // is it an image or a video? :3c hmmm
     if (IMAGE_TYPES.includes(ext)) {
         element = document.createElement("img");
-        element.src = file;
+        element.src = theFile;
     } else if (VIDEO_TYPES.includes(ext)) {
         element = document.createElement("video");
-        element.src = file;
+        element.src = theFile;
         element.autoplay = true;
         element.loop = true;
         element.muted = false;
@@ -85,14 +96,64 @@ function showPage(pageNum) {
     }
 
     mediaContainer = element; // replace da old div :3
+}
 
-    textContainer.innerText = page.text || "";
+function renderText(theText) {
+    textContainer.innerHTML = ""; // clear text first
 
-    console.log("Index " + pageNum + " loaded.");
+    if (!theText) return;
 
-    updateNavigation(); 
+    if (!isSpecialText(theText)) {
+        textContainer.textContent = theText;
+        return;
+    }
 
-    preloadNextPage();
+    console.log("Special text detected");
+
+    const regex = new RegExp(`(${SPECIAL_TEXT.join("|")})`);
+    const parts = theText.split(regex);
+
+    parts.forEach(part => {
+        if (SPECIAL_TEXT.includes(part)) {
+            const el = document.createElement("a");
+            el.className = "special";
+            el.textContent = part;
+
+            el.addEventListener("click", () => {
+                specialSelect(getSpecialType(part));
+            });
+
+            textContainer.appendChild(el);
+        } else if (part) {
+            textContainer.appendChild(document.createTextNode(part));
+        }
+    });
+}
+
+function specialSelect(theType) {
+    if (theType === "HomestuckFruits") {
+        console.log("Homestuck Fruits special text clicked!");
+        goToPage(103);
+    } else if (theType === "Onix") {
+        console.log("Onix special text clicked!");
+        goToPage(104);
+    } else if (theType === "Fish") {
+        console.log("You know what that means special text clicked!");
+        goToPage(102);
+    }
+}
+
+function isSpecialText(theText) {
+    if (!theText) return false;
+    return SPECIAL_TEXT.some(special => theText.includes(special));
+}
+
+function getSpecialType(theText) {
+    let type = null;
+    if (theText === SPECIAL_TEXT[0] || theText === SPECIAL_TEXT[1]) type = "HomestuckFruits";
+    if (theText === SPECIAL_TEXT[2]) type = "Onix";
+    if (theText === SPECIAL_TEXT[3]) type = "Fish";
+    return type;
 }
 
 function nextPage() {
@@ -227,5 +288,8 @@ const INTERACTABLE_NAV = {
     79: { next: 80, prev: 77 }, // hit
     80: { next: 81, prev: 77 }, // end
 
-    105: { next: 40, prev: 40 },
+    102: { next: 92, prev: 92 }, // fish special page
+    103: { next: 19, prev: 19 }, // homestuck special page
+    104: { next: 70, prev: 70 }, // onix special page
+    105: { next: 40, prev: 40 }, // banana 
 };
