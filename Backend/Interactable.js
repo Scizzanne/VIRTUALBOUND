@@ -1,6 +1,5 @@
 // Constants
 const DEBUG_MODE = false;
-const INTERACT_PAGES = [5, 16, 30, 40, 49, 64]; 
 
 // Globals
 let currInteract = INTERACT_PAGES[0];

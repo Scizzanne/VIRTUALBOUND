@@ -1,7 +1,3 @@
-// Constants
-const CHAT_INDICES = [85, 91, 94, 95, 96, 97, 99]; // for debug
-const DEBUG_MODE = true;
-
 // Elements
 const container = document.querySelector(".text-biscord");
 const img = document.querySelector(".img");
@@ -26,19 +22,6 @@ async function initChat() {
 
 initChat(); // init
 
-window.onkeydown = function(event) { 
-    if (!DEBUG_MODE) return;
-
-    const key = parseInt(event.key);
-
-    // Keys 1–7 map to CHAT_INDICES[0–6]
-    if (key >= 1 && key <= CHAT_INDICES.length) {
-        currentIndex = key - 1;
-        console.log("DEBUG!! Jumping to index:", CHAT_INDICES[currentIndex]);
-        renderPage();
-    }
-};
-
 // Render page
 function renderPage() {
     const pageNum = getCurrentPage();
@@ -50,9 +33,6 @@ function renderPage() {
     const ext = file.split(".").pop().toLowerCase();
 
     let element;
-
-    const IMAGE_TYPES = ["png", "jpg", "jpeg", "gif"];
-    const VIDEO_TYPES = ["mp4", "mov", "webm"];
 
     if (IMAGE_TYPES.includes(ext)) {
         element = document.createElement("img");

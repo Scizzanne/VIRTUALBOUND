@@ -1,6 +1,11 @@
 // Constants
 const MAX_INDEX = 101; // 0–101 allowed in normal flow
 const SECRET_INDICES = [102, 103, 104, 105];
+const CHAT_INDICES = [85, 91, 94, 95, 96, 97, 99];
+const INTERACT_PAGES = [5, 16, 30, 40, 49, 64]; 
+const IMAGE_TYPES = ["png", "jpg", "jpeg", "gif"];
+const VIDEO_TYPES = ["mp4", "webm", "mov"];
+const STYLE_SPLIT = 25; // index at which style changes from VR to web
 
 // Globals
 let currPage = 0; // current page 
@@ -31,9 +36,9 @@ function getPageData(index = currPage) {
 }
 
 function getPageType(index) {
-    if ([5, 16, 30, 40, 49, 64].includes(index)) return "interactable";
+    if (INTERACT_PAGES.includes(index)) return "interactable";
     if (index === 77) return "fly";
-    if ([85, 91, 94, 95, 96, 97, 99].includes(index)) return "chat";
+    if (CHAT_INDICES.includes(index)) return "chat";
     return "comic";
 }
 
@@ -63,7 +68,7 @@ function goToPage(index) {
 
     let newRenderType = newType;
     if (newType === "comic") {
-        newRenderType = index < 25 ? "vr" : "web";
+        newRenderType = index < STYLE_SPLIT ? "vr" : "web";
     }
 
     currPage = index;

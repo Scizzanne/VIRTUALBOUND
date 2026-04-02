@@ -598,6 +598,9 @@ a:hover {
 }
 
 /* Colours */
+.pavo-pu {
+    color: rgb(176 117 255);
+}
 
 .pu {
     color: rgb(129, 17, 203);

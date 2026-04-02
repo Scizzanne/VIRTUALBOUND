@@ -1,14 +1,15 @@
 // declare all media types that can be displayed
-const IMAGE_TYPES = ["png", "jpg", "jpeg", "gif"];
-const VIDEO_TYPES = ["mp4", "webm", "mov"];
 const FIRST_PAGE = 0;
-const LAST_PAGE = 101; // change as needed
 const SPECIAL_TEXT = {
     "John the Banana": 103,
     "Rose the Grape": 103,
     "onyx": 104,
     "You know what that means": 102,
     "oil": 106,
+};
+const SPEAKERS = {
+    "Captain Kracker :": "or",
+    "Captain Pavo :": "pavo-pu",
 };
 
 // gather elements
@@ -33,7 +34,7 @@ async function init() {
 
     let expectedRenderType = expectedType;
     if (expectedType === "comic") {
-        expectedRenderType = currPage < 25 ? "vr" : "web";
+        expectedRenderType = currPage < STYLE_SPLIT ? "vr" : "web";
     }
 
     if (expectedRenderType !== currentType) {
@@ -58,7 +59,7 @@ function showPage(pageNum) {
     mediaParent = mediaContainer?.parentElement;
     
     renderMedia(file);
-    renderText(page.text, pageNum);
+    renderDialogueText(page.text, pageNum);
 
     console.log("Index " + pageNum + " loaded.");
 
@@ -104,8 +105,39 @@ function renderMedia(theFile) {
     mediaContainer = element; // replace da old div :3
 }
 
-function renderText(theText, pageNum) {
+function renderDialogueText(theText, pageNum) {
     textContainer.innerHTML = "";
+    if (!theText) return;
+
+    const lines = theText.split("\n");
+
+    lines.forEach(line => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
+
+        let matchedClass = null;
+
+        // detect speaker
+        for (const speaker in SPEAKERS) {
+            if (trimmed.startsWith(speaker)) {
+                matchedClass = SPEAKERS[speaker];
+                break;
+            }
+        }
+
+        const p = document.createElement("p");
+
+        if (matchedClass) {
+            p.classList.add(matchedClass);
+        }
+
+        appendSpecialText(p, trimmed, pageNum);
+
+        textContainer.appendChild(p);
+    });
+}
+
+function appendSpecialText(container, theText, pageNum) {
     if (!theText) return;
 
     const regex = new RegExp(`(${Object.keys(SPECIAL_TEXT).join("|")})`);
@@ -116,8 +148,7 @@ function renderText(theText, pageNum) {
             const el = document.createElement("a");
             el.className = "special";
 
-            // add extra class if page index < 25
-            if (pageNum < 25) {
+            if (pageNum < STYLE_SPLIT) {
                 el.classList.add("vr-special");
             }
 
@@ -127,9 +158,9 @@ function renderText(theText, pageNum) {
                 goToPage(SPECIAL_TEXT[part]);
             });
 
-            textContainer.appendChild(el);
+            container.appendChild(el);
         } else if (part) {
-            textContainer.appendChild(document.createTextNode(part));
+            container.appendChild(document.createTextNode(part));
         }
     });
 }
@@ -201,7 +232,7 @@ function updateNavigation() {
         prev.style.display = "inline"
     }
 
-    if (curr === LAST_PAGE) {
+    if (curr === MAX_INDEX) {
         next.style.display = "none";
     } else {
         next.style.display = "inline";
