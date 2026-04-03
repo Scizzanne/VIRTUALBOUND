@@ -170,9 +170,57 @@ function isSpecialText(theText) {
     return SPECIAL_TEXT.some(special => theText.includes(special));
 }
 
+function pantherJumpscare() {
+    console.log("Panther jumpscare triggered!");
+
+    // create overlay
+    const overlay = document.createElement("div");
+    overlay.style.position = "fixed";
+    overlay.style.top = "0";
+    overlay.style.left = "0";
+    overlay.style.width = "100vw";
+    overlay.style.height = "100vh";
+    overlay.style.zIndex = "9999"; 
+    overlay.style.margin = "0";
+    overlay.style.padding = "0";
+    overlay.style.overflow = "hidden";
+
+    // create image
+    const img = document.createElement("img");
+    img.src = "./Images/panther.png";
+
+    img.style.position = "absolute";
+    img.style.top = "0";
+    img.style.left = "0";
+    img.style.width = "100vw";
+    img.style.height = "100vh";
+    img.style.objectFit = "cover";
+    img.style.zIndex = "21";
+
+    overlay.appendChild(img);
+
+    // create audio
+    const audio = new Audio("./SoundEffects/panther.mp3");
+    audio.play();  
+
+    // add overlay to body
+    document.body.appendChild(overlay);
+
+    // when audio is done, remove overlay and go to next page
+    audio.addEventListener("ended", () => {
+        document.body.removeChild(overlay);
+        goToPage(74);
+    });
+}
+
 function nextPage() {
     const curr = getCurrentPage();
     const nav = INTERACTABLE_NAV[curr];
+
+    if (curr === 73) {
+        pantherJumpscare();
+        return;
+    }
 
     if (nav) {
         if (nav.next === null) {
